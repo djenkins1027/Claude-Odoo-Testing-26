@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_capacity_plan_form" model="ir.ui.view">
+        <field name="name">capacity.plan.form</field>
+        <field name="model">capacity.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Confirm Plan" type="object"
+                            invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_done" string="Mark Done" type="object"
+                            invisible="state != 'confirmed'" class="btn-primary"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group>
+                            <field name="total_available_hours" readonly="1"/>
+                            <field name="total_planned_hours" readonly="1"/>
+                            <field name="overall_utilization" readonly="1" widget="percentage"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Workstation Capacity">
+                            <field name="line_ids" readonly="state == 'done'">
+                                <list editable="bottom">
+                                    <field name="workstation_id" readonly="1"/>
+                                    <field name="available_hours"/>
+                                    <field name="planned_hours" readonly="1"/>
+                                    <field name="actual_hours" readonly="1"/>
+                                    <field name="remaining_hours" readonly="1"/>
+                                    <field name="utilization_rate" readonly="1" widget="percentage"
+                                           decoration-danger="utilization_rate &gt; 100"
+                                           decoration-warning="utilization_rate &gt; 90"
+                                           decoration-success="utilization_rate &gt;= 60 and utilization_rate &lt;= 90"/>
+                                    <field name="over_capacity" readonly="1" widget="boolean"/>
+                                    <field name="efficiency" readonly="1" optional="show"/>
+                                    <field name="notes" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Work Orders">
+                            <field name="work_order_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="reference"/>
+                                    <field name="workstation_id"/>
+                                    <field name="date_scheduled"/>
+                                    <field name="estimated_hours"/>
+                                    <field name="actual_hours"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'done'"
+                                           decoration-info="state == 'in_progress'"
+                                           decoration-warning="state == 'scheduled'"
+                                           decoration-secondary="state == 'draft'"
+                                           decoration-danger="state == 'cancelled'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Plan notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_capacity_plan_list" model="ir.ui.view">
+        <field name="name">capacity.plan.list</field>
+        <field name="model">capacity.plan</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'done'" decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="total_available_hours"/>
+                <field name="total_planned_hours"/>
+                <field name="overall_utilization" widget="percentage"
+                       decoration-danger="overall_utilization &gt; 100"
+                       decoration-warning="overall_utilization &gt; 90"
+                       decoration-success="overall_utilization &gt;= 60 and overall_utilization &lt;= 90"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'confirmed'"
+                       decoration-secondary="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_capacity_plan_search" model="ir.ui.view">
+        <field name="name">capacity.plan.search</field>
+        <field name="model">capacity.plan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_capacity_plan" model="ir.actions.act_window">
+        <field name="name">Capacity Plans</field>
+        <field name="res_model">capacity.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
