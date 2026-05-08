@@ -1,0 +1,14 @@
+/* Shop Capacity Planning styles */
+
+.o_capacity_over_limit {
+    color: var(--o-danger);
+    font-weight: bold;
+}
+
+.o_capacity_warning {
+    color: var(--o-warning);
+}
+
+.o_capacity_ok {
+    color: var(--o-success);
+}
