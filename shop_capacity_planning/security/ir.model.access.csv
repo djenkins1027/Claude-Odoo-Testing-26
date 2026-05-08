@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_capacity_workstation_user,capacity.workstation user,model_capacity_workstation,group_capacity_user,1,0,0,0
+access_capacity_workstation_manager,capacity.workstation manager,model_capacity_workstation,group_capacity_manager,1,1,1,1
+access_capacity_work_order_user,capacity.work.order user,model_capacity_work_order,group_capacity_user,1,1,1,0
+access_capacity_work_order_manager,capacity.work.order manager,model_capacity_work_order,group_capacity_manager,1,1,1,1
+access_capacity_plan_user,capacity.plan user,model_capacity_plan,group_capacity_user,1,0,0,0
+access_capacity_plan_manager,capacity.plan manager,model_capacity_plan,group_capacity_manager,1,1,1,1
+access_capacity_plan_line_user,capacity.plan.line user,model_capacity_plan_line,group_capacity_user,1,0,0,0
+access_capacity_plan_line_manager,capacity.plan.line manager,model_capacity_plan_line,group_capacity_manager,1,1,1,1
