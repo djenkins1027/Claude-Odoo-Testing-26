@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="workstation_cnc" model="capacity.workstation">
+        <field name="name">CNC</field>
+        <field name="code">CNC</field>
+        <field name="sequence">10</field>
+        <field name="machine_count">2</field>
+        <field name="operator_count">1</field>
+        <field name="available_hours_day">8.0</field>
+        <field name="working_days_week">5</field>
+        <field name="efficiency_target">85.0</field>
+        <field name="color">1</field>
+        <field name="notes">CNC routing and cutting operations</field>
+    </record>
+
+    <record id="workstation_edgebanding" model="capacity.workstation">
+        <field name="name">Edgebanding</field>
+        <field name="code">EDGE</field>
+        <field name="sequence">20</field>
+        <field name="machine_count">1</field>
+        <field name="operator_count">1</field>
+        <field name="available_hours_day">4.0</field>
+        <field name="working_days_week">5</field>
+        <field name="efficiency_target">80.0</field>
+        <field name="color">2</field>
+        <field name="notes">Edgebanding and edge finishing operations</field>
+    </record>
+
+    <record id="workstation_assembly" model="capacity.workstation">
+        <field name="name">Assembly</field>
+        <field name="code">ASSY</field>
+        <field name="sequence">30</field>
+        <field name="machine_count">1</field>
+        <field name="operator_count">2</field>
+        <field name="available_hours_day">16.0</field>
+        <field name="working_days_week">5</field>
+        <field name="efficiency_target">90.0</field>
+        <field name="color">4</field>
+        <field name="notes">Cabinet and furniture assembly operations</field>
+    </record>
+
+    <record id="workstation_finish_prep" model="capacity.workstation">
+        <field name="name">Finish Prep</field>
+        <field name="code">FNSH</field>
+        <field name="sequence">40</field>
+        <field name="machine_count">1</field>
+        <field name="operator_count">1.5</field>
+        <field name="available_hours_day">12.0</field>
+        <field name="working_days_week">5</field>
+        <field name="efficiency_target">80.0</field>
+        <field name="color">6</field>
+        <field name="notes">Sanding, staining, and finish preparation</field>
+    </record>
+</odoo>
