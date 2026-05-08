@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_capacity_work_order_form" model="ir.ui.view">
+        <field name="name">capacity.work.order.form</field>
+        <field name="model">capacity.work.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_schedule" string="Schedule" type="object"
+                            invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_start" string="Start" type="object"
+                            invisible="state != 'scheduled'" class="btn-primary"/>
+                    <button name="action_done" string="Mark Done" type="object"
+                            invisible="state != 'in_progress'" class="btn-primary"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ['done', 'cancelled']"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object"
+                            invisible="state not in ['cancelled', 'scheduled']"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,scheduled,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Job Details">
+                            <field name="reference"/>
+                            <field name="workstation_id"/>
+                            <field name="plan_id"/>
+                            <field name="priority" widget="priority"/>
+                        </group>
+                        <group string="Scheduling">
+                            <field name="date_scheduled"/>
+                            <field name="date_completed" readonly="1"/>
+                            <field name="estimated_hours"/>
+                            <field name="actual_hours"
+                                   invisible="state not in ['in_progress', 'done']"/>
+                            <field name="efficiency" readonly="1"
+                                   invisible="state != 'done'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Job notes, special instructions..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_capacity_work_order_list" model="ir.ui.view">
+        <field name="name">capacity.work.order.list</field>
+        <field name="model">capacity.work.order</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'done'"
+                  decoration-info="state == 'in_progress'"
+                  decoration-muted="state == 'cancelled'"
+                  decoration-warning="state == 'scheduled'">
+                <field name="priority" widget="priority" optional="show"/>
+                <field name="name"/>
+                <field name="reference" optional="show"/>
+                <field name="workstation_id"/>
+                <field name="date_scheduled"/>
+                <field name="estimated_hours"/>
+                <field name="actual_hours" optional="show"/>
+                <field name="efficiency" optional="show" widget="percentage"/>
+                <field name="plan_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-info="state == 'in_progress'"
+                       decoration-warning="state == 'scheduled'"
+                       decoration-secondary="state == 'draft'"
+                       decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_capacity_work_order_kanban" model="ir.ui.view">
+        <field name="name">capacity.work.order.kanban</field>
+        <field name="model">capacity.work.order</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="workstation_id" class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="workstation_id"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="estimated_hours"/>
+                <field name="actual_hours"/>
+                <field name="date_scheduled"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="oe_kanban_color_#{record.color.raw_value}">
+                            <div class="oe_kanban_details">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <field name="priority" widget="priority"/>
+                                </div>
+                                <div class="o_kanban_record_subtitle text-muted">
+                                    <t t-if="record.reference.raw_value">
+                                        Ref: <t t-esc="record.reference.raw_value"/>
+                                    </t>
+                                </div>
+                                <div class="mt-2 d-flex justify-content-between">
+                                    <span>
+                                        <i class="fa fa-clock-o me-1"/>
+                                        <t t-esc="record.estimated_hours.raw_value"/> hrs est.
+                                    </span>
+                                    <span class="text-muted">
+                                        <i class="fa fa-calendar me-1"/>
+                                        <field name="date_scheduled"/>
+                                    </span>
+                                </div>
+                                <div class="mt-1">
+                                    <field name="state" widget="label_selection"
+                                           options="{'classes': {'draft': 'secondary', 'scheduled': 'warning', 'in_progress': 'info', 'done': 'success', 'cancelled': 'danger'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_capacity_work_order_pivot" model="ir.ui.view">
+        <field name="name">capacity.work.order.pivot</field>
+        <field name="model">capacity.work.order</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="workstation_id" type="row"/>
+                <field name="date_scheduled" type="col" interval="week"/>
+                <field name="estimated_hours" type="measure"/>
+                <field name="actual_hours" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_capacity_work_order_graph" model="ir.ui.view">
+        <field name="name">capacity.work.order.graph</field>
+        <field name="model">capacity.work.order</field>
+        <field name="arch" type="xml">
+            <graph type="bar">
+                <field name="workstation_id" type="row"/>
+                <field name="estimated_hours" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_capacity_work_order_search" model="ir.ui.view">
+        <field name="name">capacity.work.order.search</field>
+        <field name="model">capacity.work.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="reference"/>
+                <field name="workstation_id"/>
+                <field name="plan_id"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Scheduled" name="scheduled" domain="[('state','=','scheduled')]"/>
+                <filter string="In Progress" name="in_progress" domain="[('state','=','in_progress')]"/>
+                <filter string="Done" name="done" domain="[('state','=','done')]"/>
+                <filter string="Active" name="active"
+                        domain="[('state','in',['draft','scheduled','in_progress'])]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Workstation" name="group_workstation"
+                            context="{'group_by': 'workstation_id'}"/>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Week" name="group_week"
+                            context="{'group_by': 'date_scheduled:week'}"/>
+                    <filter string="Plan" name="group_plan"
+                            context="{'group_by': 'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_capacity_work_order" model="ir.actions.act_window">
+        <field name="name">Work Orders</field>
+        <field name="res_model">capacity.work.order</field>
+        <field name="view_mode">kanban,list,form,pivot,graph</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>
