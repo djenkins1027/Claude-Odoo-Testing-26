@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_capacity_root"
+              name="Capacity Planning"
+              sequence="50"/>
+
+    <menuitem id="menu_capacity_planning"
+              name="Planning"
+              parent="menu_capacity_root"
+              sequence="10"/>
+
+    <menuitem id="menu_capacity_plan"
+              name="Capacity Plans"
+              parent="menu_capacity_planning"
+              action="action_capacity_plan"
+              sequence="10"/>
+
+    <menuitem id="menu_capacity_work_order"
+              name="Work Orders"
+              parent="menu_capacity_planning"
+              action="action_capacity_work_order"
+              sequence="20"/>
+
+    <menuitem id="menu_capacity_config"
+              name="Configuration"
+              parent="menu_capacity_root"
+              sequence="90"
+              groups="shop_capacity_planning.group_capacity_manager"/>
+
+    <menuitem id="menu_capacity_workstation"
+              name="Workstations"
+              parent="menu_capacity_config"
+              action="action_capacity_workstation"
+              sequence="10"
+              groups="shop_capacity_planning.group_capacity_manager"/>
+</odoo>
